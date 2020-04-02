@@ -3,6 +3,8 @@ import { expect } from 'chai'
 
 import parse from '../../src/parse'
 import { graph } from '../../src/data-factory'
+import { SPARQLUpdateContentType } from '../../src/types'
+import DataFactory from '../../src/factories/rdflib-data-factory'
 
 describe('Parse', () => {
   describe('ttl', () => {
@@ -56,6 +58,17 @@ describe('Parse', () => {
         expect(statement.subject.value).to.equal('https://www.example.org/#me')
         expect(statement.object.value).to.equal('https://www.example.org/abc/xyz')
       })
+    })
+  })
+  describe('sparlq-update', () => {
+    it.only('add a triple to an empty document', () => {
+      let base = 'https://example.com/'
+      let mimeType = SPARQLUpdateContentType
+      console.log(mimeType)
+      let store = DataFactory.graph()
+      let content = 'INSERT DATA { <https://example.com/#s> <https://example.com/#p> <https://example.com/#o>. }'
+      parse(content, store, base, mimeType)
+      expect(store.statements[0]).to.eql([])
     })
   })
 })
